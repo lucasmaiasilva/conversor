@@ -13,8 +13,8 @@ public class PaginaInicial {
 	@Path("/saudacao")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public void saudacao(){
-		System.out.println("Boa noite");
+	public String saudacao(){
+		return "Boa noite";
 	}
 
 }
