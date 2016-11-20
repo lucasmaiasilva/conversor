@@ -25,6 +25,16 @@ import com.sun.jersey.multipart.FormDataParam;
 public class PaginaInicial {
 
 	@GET
+	@Path("/upload")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response upload() throws IOException {
+		//UploadS3 s3 = new UploadS3();
+		//s3.upload();
+		return Response.status(Status.CREATED).entity("nao sei se foi").build();
+	}
+
+	@GET
 	@Path("/saudacao")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -42,7 +52,7 @@ public class PaginaInicial {
 		return Response.status(Status.CREATED).entity(p).build();
 	}
 
-	private static final String UPLOAD_FOLDER = "/Users/lucassilva/sambatech/";
+	private static final String UPLOAD_FOLDER = "/tmp/sambatech/";
 	@Context
 	private UriInfo context;
 
@@ -50,7 +60,7 @@ public class PaginaInicial {
 	@Path("/uploadvideo")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadVideo(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+	    @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
 		// check if all form parameters are provided
 		if (uploadedInputStream == null || fileDetail == null)
 			return Response.status(400).entity("Invalid form data").build();
@@ -66,6 +76,9 @@ public class PaginaInicial {
 		} catch (IOException e) {
 			return Response.status(500).entity("Can not save file").build();
 		}
+		/*Rotina para fazer o Upload para o Amazon S3*/
+		UploadS3 s3 = new UploadS3();
+		s3.upload("lucasmaiasilva", fileDetail.getFileName(), uploadedFileLocation);
 		return Response.status(200).entity("File saved to " + uploadedFileLocation).build();
 	}
 
