@@ -1,69 +1,35 @@
-package conversor;
+/*package conversor;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
-import org.apache.http.client.ClientProtocolException;
-
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
-@Path("/conversor")
-public class PaginaInicial {
-	
-	@GET
-	@Path("/teste")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response teste() throws ClientProtocolException, IOException {
-		RestClient cli = new RestClient();
-		cli.get();
-		return Response.status(Status.CREATED).entity(cli).build();
+@Path("/uploadvideo")
+public class VideoUpload {
+	private static final String UPLOAD_FOLDER = "/Users/lucassilva/sambatech/";
+
+	public VideoUpload() {
 	}
 
-
-	@GET
-	@Path("/saudacao")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response saudacao() {
-		Saudacao sau = new Saudacao("Boa NoiTE 3 teste de novo");
-		return Response.status(Status.CREATED).entity(sau).build();
-	}
-
-	@GET
-	@Path("/saudacao/{name}")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response saudacao(@PathParam("name") String name) {
-		Person p = new Person(name);
-		return Response.status(Status.CREATED).entity(p).build();
-	}
-
-	private static final String UPLOAD_FOLDER = "/tmp/sambatech/";
 	@Context
 	private UriInfo context;
 
+	
 	@POST
-	@Path("/uploadvideo")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadVideo(@FormDataParam("file") InputStream uploadedInputStream,
-	    @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		// check if all form parameters are provided
 		if (uploadedInputStream == null || fileDetail == null)
 			return Response.status(400).entity("Invalid form data").build();
@@ -79,11 +45,9 @@ public class PaginaInicial {
 		} catch (IOException e) {
 			return Response.status(500).entity("Can not save file").build();
 		}
-		/*Rotina para fazer o Upload para o Amazon S3*/
-		UploadS3 s3 = new UploadS3();
-		s3.upload("lucasmaiasilva", fileDetail.getFileName(), uploadedFileLocation);
 		return Response.status(200).entity("File saved to " + uploadedFileLocation).build();
 	}
+
 
 	private void saveToFile(InputStream inStream, String target) throws IOException {
 		OutputStream out = null;
@@ -97,11 +61,11 @@ public class PaginaInicial {
 		out.close();
 	}
 
+
 	private void createFolderIfNotExists(String dirName) throws SecurityException {
 		File theDir = new File(dirName);
 		if (!theDir.exists()) {
 			theDir.mkdir();
 		}
 	}
-
-}
+}*/
