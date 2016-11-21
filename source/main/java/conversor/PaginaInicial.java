@@ -32,7 +32,7 @@ public class PaginaInicial {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response teste() throws ClientProtocolException, IOException {
 		RestClient cli = new RestClient();
-		cli.get();
+		cli.post();
 		return Response.status(Status.CREATED).entity(cli).build();
 	}
 
