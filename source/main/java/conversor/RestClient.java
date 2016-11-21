@@ -3,7 +3,6 @@ package conversor;
 import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.ClientProtocolException;
@@ -13,7 +12,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class RestClient {
 
@@ -37,32 +35,38 @@ public class RestClient {
 				.get(String.class));
 	}
 
-	public static void post() {
-		
+	public void post() {
+
 		Client client = Client.create();
 
-        WebResource webResource = client.resource("https://app.zencoder.com/api/v2/jobs");
+		WebResource webResource = client.resource("https://app.zencoder.com/api/v2/jobs");
 
-        String input = "{\"switch\": \"00:00:00:00:00:00:00:01\", "
-                + "\"name\":\"flow-mod-1\", \"priority\":\"32768\", "
-                + "\"ingress-port\":\"1\",\"active\":\"true\", "
-                + "\"actions\":\"output=2\"}";
+		/*
+		 * { "api_key": "93h630j1dsyshjef620qlkavnmzui3", "input":
+		 * "s3://bucket-name/file-name.avi", "outputs": [ { "url":
+		 * "s3://output-bucket/output-file-name.mp4", "width": "1280", "height":
+		 * "720" } ] }
+		 */
 
-        // POST method
-        ClientResponse response = webResource.accept("application/json")
-                .type("application/json").post(ClientResponse.class, input);
-
-        // check response status code
-        if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + response.getStatus());
-        }
-
-        // display response
-        String output = response.getEntity(String.class);
-        System.out.println("Output from Server .... ");
-        System.out.println(output + "\n");
+		String input = "{\"api_key\": \"\", "
+				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/sample1.dv\", \"outputs\": [ { \"url\": "
+				+ "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/output-file-eita.mp4\", \"width\": \"1280\", \"height\":"
+				+ "\"720\"} ] }";
 		
+
+		// POST method
+		ClientResponse response = webResource.accept("application/json").type("application/json")
+				.post(ClientResponse.class, input);
+
+		// check response status code
+		if (response.getStatus() != 201) {
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+		}
+
+		// display response
+		String output = response.getEntity(String.class);
+		System.out.println("Output from Server .... ");
+		System.out.println(output + "\n");
 
 	}
 
