@@ -40,6 +40,8 @@ public class RestClient {
 		Client client = Client.create();
 
 		WebResource webResource = client.resource("https://app.zencoder.com/api/v2/jobs");
+		
+		String zencode = System.getenv("zencode");
 
 		/*
 		 * { "api_key": "93h630j1dsyshjef620qlkavnmzui3", "input":
@@ -48,7 +50,7 @@ public class RestClient {
 		 * "720" } ] }
 		 */
 
-		String input = "{\"api_key\": \"\", "
+		String input = "{\"api_key\": \""+zencode+"\", "
 				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/sample1.dv\", \"outputs\": [ { \"url\": "
 				+ "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/output-file-eita.mp4\", \"width\": \"1280\", \"height\":"
 				+ "\"720\"} ] }";
