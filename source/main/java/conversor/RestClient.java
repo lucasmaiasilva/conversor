@@ -35,26 +35,18 @@ public class RestClient {
 				.get(String.class));
 	}
 
-	public void post() {
+	public void post(String file_name, String new_file_name) {
 
 		Client client = Client.create();
 
 		WebResource webResource = client.resource("https://app.zencoder.com/api/v2/jobs");
-		
+
 		String zencode = System.getenv("zencode");
 
-		/*
-		 * { "api_key": "93h630j1dsyshjef620qlkavnmzui3", "input":
-		 * "s3://bucket-name/file-name.avi", "outputs": [ { "url":
-		 * "s3://output-bucket/output-file-name.mp4", "width": "1280", "height":
-		 * "720" } ] }
-		 */
-
-		String input = "{\"api_key\": \""+zencode+"\", "
-				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/sample1.dv\", \"outputs\": [ { \"url\": "
-				+ "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/output-file-eita.mp4\", \"width\": \"1280\", \"height\":"
+		String input = "{\"api_key\": \"" + zencode + "\", "
+				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/"+file_name+"\", \"outputs\": [ { \"url\": "
+				+ "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/"+new_file_name+"\", \"width\": \"1280\", \"height\":"
 				+ "\"720\"} ] }";
-		
 
 		// POST method
 		ClientResponse response = webResource.accept("application/json").type("application/json")
@@ -73,14 +65,3 @@ public class RestClient {
 	}
 
 }
-
-/*
- * ClientConfig config = new DefaultClientConfig(); Client client =
- * Client.create(config); WebResource webResource =
- * client.resource(UriBuilder.fromUri("http://").build());
- * 
- * ClientResponse response = webResource.path("restPath").path("resourcePath").
- * type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(
- * ClientResponse.class, myPojo); System.out.println("Response " +
- * response.getEntity(String.class));
- */

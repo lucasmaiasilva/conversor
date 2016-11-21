@@ -10,7 +10,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -32,7 +31,7 @@ public class PaginaInicial {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response teste() throws ClientProtocolException, IOException {
 		RestClient cli = new RestClient();
-		cli.post();
+		cli.post("sample1.dv","aaaaaaabichao.mp4");
 		return Response.status(Status.CREATED).entity(cli).build();
 	}
 
@@ -46,14 +45,6 @@ public class PaginaInicial {
 		return Response.status(Status.CREATED).entity(sau).build();
 	}
 
-	@GET
-	@Path("/saudacao/{name}")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response saudacao(@PathParam("name") String name) {
-		Person p = new Person(name);
-		return Response.status(Status.CREATED).entity(p).build();
-	}
 
 	private static final String UPLOAD_FOLDER = "/tmp/sambatech/";
 	@Context
@@ -80,8 +71,10 @@ public class PaginaInicial {
 			return Response.status(500).entity("Can not save file").build();
 		}
 		/*Rotina para fazer o Upload para o Amazon S3*/
-		UploadS3 s3 = new UploadS3();
+		S3 s3 = new S3();
 		s3.upload("lucasmaiasilva", fileDetail.getFileName(), uploadedFileLocation);
+		RestClient cli = new RestClient();
+		cli.post(fileDetail.getFileName(),fileDetail.getFileName()+".mp4");
 		return Response.status(200).entity("File saved to " + uploadedFileLocation).build();
 	}
 
@@ -103,5 +96,7 @@ public class PaginaInicial {
 			theDir.mkdir();
 		}
 	}
+	
+	
 
 }
