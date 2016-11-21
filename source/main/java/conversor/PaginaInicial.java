@@ -18,11 +18,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.http.client.ClientProtocolException;
+
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/conversor")
 public class PaginaInicial {
+	
+	@GET
+	@Path("/teste")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response teste() throws ClientProtocolException, IOException {
+		RestClient cli = new RestClient();
+		cli.get();
+		return Response.status(Status.CREATED).entity(cli).build();
+	}
 
 	@GET
 	@Path("/upload")
@@ -39,7 +51,7 @@ public class PaginaInicial {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response saudacao() {
-		Saudacao sau = new Saudacao("Boa NoiTE 3");
+		Saudacao sau = new Saudacao("Boa NoiTE 3 teste de novo");
 		return Response.status(Status.CREATED).entity(sau).build();
 	}
 
