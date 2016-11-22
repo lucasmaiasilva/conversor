@@ -17,22 +17,22 @@ O Serviço de codificação utilizado foi o Zencode. A sua API REST utilizando J
 
 A aplicação pode ser acessada pelo endereço X:
 
-1 - O usuário seleciona um vídeo presente em seu computador e faz o upload no sistema
-2 - É necessário aguardar, que o upload seja feito e a decodificação seja concluída
-3 - Por, fim o usuário é redirecionado automaticamente para a página onde o vídeo pode ser assistido
+1. O usuário seleciona um vídeo presente em seu computador e faz o upload no sistema
+2. É necessário aguardar, que o upload seja feito e a decodificação seja concluída
+3. Por, fim o usuário é redirecionado automaticamente para a página onde o vídeo pode ser assistido
 
 ### Ponto de vista técnico:
 
 O Pipeline da aplicação funciona da seguinte forma:
 
-1 - O servidor é inicializado com apenas um endpoint para receber o upload dos videos
-2 - O servidor recebe o video e salva em seu disco local
-3 - O vídeo é exportado para o servidor da Amazon S3
-4 - O vídeo é enviado para a decodificação utilizando o serviço Zencode
-5 - O vídeo é decodificado e armazenado na Amazon S3
-6 - O Servidor checa se o vídeo já está disponível para donwload no serviço S3
-7 - O servidor realiza o download
-8 - O cliente é redirecionado para a página do player do vídeo
+1. O servidor é inicializado com apenas um endpoint para receber o upload dos videos
+2. O servidor recebe o video e salva em seu disco local
+3. O vídeo é exportado para o servidor da Amazon S3
+4. O vídeo é enviado para a decodificação utilizando o serviço Zencode
+5. O vídeo é decodificado e armazenado na Amazon S3
+6. O Servidor checa se o vídeo já está disponível para donwload no serviço S3
+7. O servidor realiza o download
+8. O cliente é redirecionado para a página do player do vídeo
 
 ## Front End
 
