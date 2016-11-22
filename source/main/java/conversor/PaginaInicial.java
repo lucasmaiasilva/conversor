@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,9 +33,9 @@ public class PaginaInicial {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response teste() throws ClientProtocolException, IOException {
-		RestClient cli = new RestClient();
-		cli.post("sample1.dv","aaaaaaabichao.mp4");
-		return Response.status(Status.CREATED).entity(cli).build();
+		S3 s3 = new S3();
+		s3.download("testedolucas.png");
+		return Response.status(Status.CREATED).entity("ok").build();
 	}
 
 
@@ -54,7 +57,7 @@ public class PaginaInicial {
 	@Path("/uploadvideo")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadVideo(@FormDataParam("file") InputStream uploadedInputStream,
-	    @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+	    @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException, URISyntaxException, InterruptedException {
 		// check if all form parameters are provided
 		if (uploadedInputStream == null || fileDetail == null)
 			return Response.status(400).entity("Invalid form data").build();
@@ -75,7 +78,15 @@ public class PaginaInicial {
 		s3.upload("lucasmaiasilva", fileDetail.getFileName(), uploadedFileLocation);
 		RestClient cli = new RestClient();
 		cli.post(fileDetail.getFileName(),fileDetail.getFileName()+".mp4");
-		return Response.status(200).entity("File saved to " + uploadedFileLocation).build();
+		Thread.sleep(3000);
+		s3.download(fileDetail.getFileName()+".mp4");
+		//return Response.status(200).entity("File saved to teste" + uploadedFileLocation).build();
+		
+		URL url = new URL("http://52.67.43.9/video.html"); //Some instantiated URL object
+		URI uri = url.toURI();
+		//URI targetURIForRedirection = "";
+	    return Response.seeOther(uri).build();
+
 	}
 
 	private void saveToFile(InputStream inStream, String target) throws IOException {

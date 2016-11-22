@@ -2,9 +2,11 @@ package conversor;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -30,7 +33,8 @@ public class S3 {
 		String keyName = name;
 		String filePath = path;
 
-		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+		//AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+		AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
 		// Create a list of UploadPartResponse objects. You get one of these
 		// for each part upload.
@@ -81,20 +85,13 @@ public class S3 {
 	public void download(String file) throws IOException {
 		String bucketName = "lucasmaiasilva";
 		String key = file;
-		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+		//AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+		AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+
 		try {
 			System.out.println("Downloading an object");
 			S3Object s3object = s3Client.getObject(new GetObjectRequest(bucketName, key));
-			System.out.println("Content-Type: " + s3object.getObjectMetadata().getContentType());
-			displayTextInputStream(s3object.getObjectContent());
-
-			// Get a range of bytes from an object.
-			GetObjectRequest rangeObjectRequest = new GetObjectRequest(bucketName, key);
-			rangeObjectRequest.setRange(0, 10);
-			S3Object objectPortion = s3Client.getObject(rangeObjectRequest);
-
-			System.out.println("Printing bytes retrieved.");
-			displayTextInputStream(objectPortion.getObjectContent());
+			saveToFile(s3object.getObjectContent(), "/var/www/html/video.mp4");
 
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException, which" + " means your request made it "
@@ -112,16 +109,15 @@ public class S3 {
 		}
 	}
 
-	private static void displayTextInputStream(InputStream input) throws IOException {
-		// Read one text line at a time and display.
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-		while (true) {
-			String line = reader.readLine();
-			if (line == null)
-				break;
-
-			System.out.println("    " + line);
+	private static void saveToFile(InputStream inStream, String target) throws IOException {
+		OutputStream out = null;
+		int read = 0;
+		byte[] bytes = new byte[1024];
+		out = new FileOutputStream(new File(target));
+		while ((read = inStream.read(bytes)) != -1) {
+			out.write(bytes, 0, read);
 		}
-		System.out.println();
+		out.flush();
+		out.close();
 	}
 }
