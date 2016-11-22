@@ -56,7 +56,7 @@ public class RestClient {
 
 		// check response status code
 		if (response.getStatus() != 201) {
-			throw new RuntimeException("[CONVERSOR] ERRO HTTP codigo: " + response.getStatus());
+			throw new RuntimeException("[CONVERSOR] Servidor Zencode retornou ERRO HTTP codigo: " + response.getStatus());
 		}
 
 		// display response

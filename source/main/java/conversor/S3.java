@@ -70,7 +70,7 @@ public class S3 {
 		}
 	}
 
-	public void download(String file) throws IOException {
+	public void download(String file) throws IOException, InterruptedException {
 		String bucketName = "lucasmaiasilva";
 		String key = file;
 
@@ -103,12 +103,18 @@ public class S3 {
 		}
 	}
 
-	private static void saveToFile(InputStream inStream, String target) throws IOException {
+	private static void saveToFile(InputStream inStream, String target) throws IOException, InterruptedException {
+		
 		OutputStream out = null;
 		int read = 0;
 		byte[] bytes = new byte[1024];
 		File file = new File(target);
-		file.setExecutable(true);
+		
+		
+		//file.setReadable(true, false);
+		//file.setExecutable(true, false);
+		//file.setWritable(true, false);
+		
 		out = new FileOutputStream(file);
 
 		while ((read = inStream.read(bytes)) != -1) {
@@ -116,5 +122,9 @@ public class S3 {
 		}
 		out.flush();
 		out.close();
+		
+		Runtime r = Runtime.getRuntime();
+		Process p = r.exec("chmod 777 /var/www/html/videos/video.mp4");
+		p.waitFor();
 	}
 }
