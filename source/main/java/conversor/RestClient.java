@@ -41,12 +41,14 @@ public class RestClient {
 
 		WebResource webResource = client.resource("https://app.zencoder.com/api/v2/jobs");
 
+		/*API Key do Zencode e definida como variavel de ambiente*/
 		String zencode = System.getenv("zencode");
 
+		/*zencode codifica para mp4 por default*/
 		String input = "{\"api_key\": \"" + zencode + "\", "
-				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/"+file_name+"\", \"outputs\": [ { \"url\": "
-				+ "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/"+new_file_name+"\", \"width\": \"1280\", \"height\":"
-				+ "\"720\"} ] }";
+				+ "\"input\":\"https://s3-sa-east-1.amazonaws.com/lucasmaiasilva/" + file_name
+				+ "\", \"outputs\": [ { \"url\": " + "\"s3://s3-sa-east-1.amazonaws.com/lucasmaiasilva/" + new_file_name
+				+ "\", \"width\": \"1280\", \"height\":" + "\"720\"} ] }";
 
 		// POST method
 		ClientResponse response = webResource.accept("application/json").type("application/json")
@@ -54,12 +56,12 @@ public class RestClient {
 
 		// check response status code
 		if (response.getStatus() != 201) {
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			throw new RuntimeException("[CONVERSOR] ERRO HTTP codigo: " + response.getStatus());
 		}
 
 		// display response
 		String output = response.getEntity(String.class);
-		System.out.println("Output from Server .... ");
+		System.out.println("[CONVERSOR] Saida do servidor .... ");
 		System.out.println(output + "\n");
 
 	}
