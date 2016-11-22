@@ -89,9 +89,15 @@ public class S3 {
 		AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
 		try {
+			
+			System.out.println("Checa se o objeto existe");
+		    while(!s3Client.doesObjectExist(bucketName, key)){
+		    	
+		    }
 			System.out.println("Downloading an object");
-			S3Object s3object = s3Client.getObject(new GetObjectRequest(bucketName, key));
-			saveToFile(s3object.getObjectContent(), "/var/www/html/video.mp4");
+
+		    S3Object s3object = s3Client.getObject(new GetObjectRequest(bucketName, key));
+			saveToFile(s3object.getObjectContent(), "/var/www/html/videos/video.mp4");
 
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException, which" + " means your request made it "
@@ -113,7 +119,10 @@ public class S3 {
 		OutputStream out = null;
 		int read = 0;
 		byte[] bytes = new byte[1024];
-		out = new FileOutputStream(new File(target));
+		File file = new File(target);
+		file.setExecutable(true);
+		out = new FileOutputStream(file);
+		
 		while ((read = inStream.read(bytes)) != -1) {
 			out.write(bytes, 0, read);
 		}

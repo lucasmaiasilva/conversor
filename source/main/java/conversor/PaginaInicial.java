@@ -47,7 +47,7 @@ public class PaginaInicial {
 		Saudacao sau = new Saudacao("Boa NoiTE 3 teste de novo");
 		return Response.status(Status.CREATED).entity(sau).build();
 	}
-
+	
 
 	private static final String UPLOAD_FOLDER = "/tmp/sambatech/";
 	@Context
@@ -76,13 +76,15 @@ public class PaginaInicial {
 		/*Rotina para fazer o Upload para o Amazon S3*/
 		S3 s3 = new S3();
 		s3.upload("lucasmaiasilva", fileDetail.getFileName(), uploadedFileLocation);
+		/*Rotina para enviar para o Zencoder*/
 		RestClient cli = new RestClient();
 		cli.post(fileDetail.getFileName(),fileDetail.getFileName()+".mp4");
-		Thread.sleep(3000);
+		/*Baixar o arquivo do amazon s3 para o disco local*/
 		s3.download(fileDetail.getFileName()+".mp4");
 		//return Response.status(200).entity("File saved to teste" + uploadedFileLocation).build();
 		
-		URL url = new URL("http://52.67.43.9/video.html"); //Some instantiated URL object
+		/*Redicrecionamento para a pagina do player*/
+		URL url = new URL("http://52.67.43.9/video.html"); 
 		URI uri = url.toURI();
 		//URI targetURIForRedirection = "";
 	    return Response.seeOther(uri).build();
